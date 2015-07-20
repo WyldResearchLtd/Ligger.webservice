@@ -34,10 +34,7 @@ var insert_records = function(req, res) {
    //client.query("DROP TABLE IF EXISTS scores");
 
    // Creat table and insert 2 records into it
-   client.query("CREATE TABLE IF NOT EXISTS scores(userID text NOT NULL, deviceID text NOT NULL, name text, score integer, level integer, CONSTRAINT users_pkey PRIMARY KEY (userID, deviceID))");
-   //client.query("INSERT INTO scores(name, userID, deviceID, score, level) values($1, $2, $3, $4, $5)", ['MajesticPotatoe', '12345', 'abcdef', 2200, 4]);
-   //client.query("INSERT INTO scores(name, userID, deviceID, score, level) values($1, $2, $3, $4, $5)", ['Bob', '7890','blockhead',1900,5]);
-
+   client.query("CREATE TABLE IF NOT EXISTS scores(userID text NOT NULL, deviceID text NOT NULL, name text, score integer, level integer, datetime text, log text, CONSTRAINT users_pkey PRIMARY KEY (userID, deviceID, datetime))");
    // Write output
    res.writeHead(200, {'Content-Type': 'text/plain'});
    res.write("0 records is inserted.\n");
@@ -71,40 +68,40 @@ var insert_records = function(req, res) {
    });
 }
 
-    // PUT
-    var update_record = function(req, res) {
-    console.log("In update");
-
-    // Connect to DB
-    var conString = "pg://postgres:postgres@localhost:5432/ligger";
-    var client = new pg.Client(conString);
-    client.connect(); 
-
-    // Update the record where the name is Bob
-    query = client.query("UPDATE scores set score = 1990 WHERE name='Bob'");
-     	res.writeHead(200, {'Content-Type': 'text/plain'});
-     	res.write("Updated record  - Set record with name Bob, a new score of 1990\n");
-     	res.end();
-    console.log("Updated record - Set record with name Bob, a new score");
-   }
-
-// DELETE
-var delete_record = function(req, res) {
-   console.log("In delete");
-
-   // Connect to DB
-   var conString = "pg://postgres:postgres@localhost:5432/ligger";
-    var client = new pg.Client(conString);
-    client.connect(); 
-
-    // Delete the record where userID is 7890
-    client.query("DELETE FROM scores WHERE userID = '7890'");
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.write("Deleted record where userID was 7890\n");
-    res.end();
-    console.log("Deleted record where userID is 7890");
-    
-}
+//     // PUT
+//     var update_record = function(req, res) {
+//     console.log("In update");
+// 
+//     // Connect to DB
+//     var conString = "pg://postgres:postgres@localhost:5432/ligger";
+//     var client = new pg.Client(conString);
+//     client.connect(); 
+// 
+//     // Update the record where the name is Bob
+//     query = client.query("UPDATE scores set score = 1990 WHERE name='Bob'");
+//      	res.writeHead(200, {'Content-Type': 'text/plain'});
+//      	res.write("Updated record  - Set record with name Bob, a new score of 1990\n");
+//      	res.end();
+//     console.log("Updated record - Set record with name Bob, a new score");
+//    }
+// 
+// // DELETE
+// var delete_record = function(req, res) {
+//    console.log("In delete");
+// 
+//    // Connect to DB
+//    var conString = "pg://postgres:postgres@localhost:5432/ligger";
+//     var client = new pg.Client(conString);
+//     client.connect(); 
+// 
+//     // Delete the record where userID is 7890
+//     client.query("DELETE FROM scores WHERE userID = '7890'");
+//     res.writeHead(200, {'Content-Type': 'text/plain'});
+//     res.write("Deleted record where userID was 7890\n");
+//     res.end();
+//     console.log("Deleted record where userID is 7890");
+//     
+// }
 
 
 // Create server 
@@ -116,12 +113,17 @@ http.createServer(function(req, res) {
      else if(req.method == 'GET') {
          list_records(req,res);
      }
-     else if(req.method == 'PUT') {
-         update_record(req,res);
-     }
-     else if(req.method == 'DELETE') {
-         delete_record(req,res);
-     }
+     // else if(req.method == 'PUT') {
+     //     update_record(req,res);
+     // }
+     // else if(req.method == 'DELETE') {
+     //     delete_record(req,res);
+     // }
+     else {
+     	console.log("[405] " + req.method + " to " + req.url);
+    	res.writeHead(405, "Method not supported", {'Content-Type': 'text/html'});
+    	res.end('<html><head><title>405 - Method not supported</title></head><body><h1>Method not supported.</h1></body></html>');
+  }
      
     
 }).listen(port,host);
