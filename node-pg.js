@@ -1,6 +1,6 @@
 /*************************************************************************************************************
  *
- * Developed by : Tinniam V Ganesh                                  Date: 20 July 2014
+ * Developed by : Gene Myers                                  Date: 18 July 2015
  * A Node.js server with PostgreSQL DB
  * 
  *************************************************************************************************************/
@@ -9,7 +9,7 @@ var http = require("http")
 var port = 5433;
 var host = '127.0.0.1';
 
-//Insert 2 records into the emps table
+//POST
 var insert_records = function(req, res) {
    console.log("In insert");
    // Connect to DB
@@ -17,23 +17,36 @@ var insert_records = function(req, res) {
    var client = new pg.Client(conString);
    client.connect(); 
 
+    //console.log("POST Request obj: " + req);
+    req.on('data', function(chunk) {
+	      console.log("Received body data:");
+	      console.log(chunk.toString());
+	    });
+
+	req.on('end', function() {
+	      // empty 200 OK response for now
+	      res.writeHead(200, "OK", {'Content-Type': 'text/html'});
+	      res.end();
+	      console.log("Data end.");
+	    });
+    
    //Drop table if it exists
    //client.query("DROP TABLE IF EXISTS scores");
 
    // Creat table and insert 2 records into it
-   client.query("CREATE TABLE IF NOT EXISTS scores(name text, userID text, deviceID text, score integer, level integer)");
-   client.query("INSERT INTO scores(name, userID, deviceID, score, level) values($1, $2, $3, $4, $5)", ['MajesticPotatoe', '12345', 'abcdef', 2200, 4]);
-   client.query("INSERT INTO scores(name, userID, deviceID, score, level) values($1, $2, $3, $4, $5)", ['Bob', '7890','blockhead',1900,5]);
+   client.query("CREATE TABLE IF NOT EXISTS scores(userID text NOT NULL, deviceID text NOT NULL, name text, score integer, level integer, CONSTRAINT users_pkey PRIMARY KEY (userID, deviceID))");
+   //client.query("INSERT INTO scores(name, userID, deviceID, score, level) values($1, $2, $3, $4, $5)", ['MajesticPotatoe', '12345', 'abcdef', 2200, 4]);
+   //client.query("INSERT INTO scores(name, userID, deviceID, score, level) values($1, $2, $3, $4, $5)", ['Bob', '7890','blockhead',1900,5]);
 
    // Write output
    res.writeHead(200, {'Content-Type': 'text/plain'});
-   res.write("2 records is inserted.\n");
+   res.write("0 records is inserted.\n");
    res.end();
-   console.log("Inserted 2 records");
+   console.log("Inserted 0 records");
    }
 
 
-  // List records the records in the games table
+  // GET
   var list_records = function(req, res) {
   console.log("In listing records");
 
@@ -43,7 +56,8 @@ var insert_records = function(req, res) {
   client.connect(); 
 
   // Select all rows in the table
-  var query = client.query("SELECT name, userID, deviceID, score, level FROM scores ORDER BY name");
+  var query = client.query("SELECT name, userID, deviceID, score, level FROM scores ORDER BY score DESC, userID DESC LIMIT 3");
+  //ASC or DESC
   query.on("row", function (row, result) {
     	 result.addRow(row);
    });
@@ -57,7 +71,7 @@ var insert_records = function(req, res) {
    });
 }
 
-    // Update a record in the emps table
+    // PUT
     var update_record = function(req, res) {
     console.log("In update");
 
@@ -67,24 +81,24 @@ var insert_records = function(req, res) {
     client.connect(); 
 
     // Update the record where the name is Bob
-    query = client.query("UPDATE emps set score = 1990 WHERE name='Bob'");
+    query = client.query("UPDATE scores set score = 1990 WHERE name='Bob'");
      	res.writeHead(200, {'Content-Type': 'text/plain'});
      	res.write("Updated record  - Set record with name Bob, a new score of 1990\n");
      	res.end();
     console.log("Updated record - Set record with name Bob, a new score");
    }
 
-//Delete record
+// DELETE
 var delete_record = function(req, res) {
    console.log("In delete");
 
    // Connect to DB
-   var conString = "pg://postgres:postgres@localhost:5432/scores";
+   var conString = "pg://postgres:postgres@localhost:5432/ligger";
     var client = new pg.Client(conString);
     client.connect(); 
 
     // Delete the record where userID is 7890
-    client.query("DELETE FROM  scores WHERE userID = '7890'");
+    client.query("DELETE FROM scores WHERE userID = '7890'");
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.write("Deleted record where userID was 7890\n");
     res.end();
@@ -93,7 +107,7 @@ var delete_record = function(req, res) {
 }
 
 
-// Create a server 
+// Create server 
 http.createServer(function(req, res) {
      
      if(req.method == 'POST') {
