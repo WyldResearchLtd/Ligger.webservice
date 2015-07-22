@@ -1,0 +1,28 @@
+Connected to 5433   127.0.0.1
+In listing records
+[
+    {
+        "name": "FU",
+        "userid": "",
+        "deviceid": "",
+        "score": 4050,
+        "level": 2,
+        "datetime": "2015-07-22 00:07"
+    },
+    {
+        "name": "FU",
+        "userid": "",
+        "deviceid": "",
+        "score": 2130,
+        "level": 1,
+        "datetime": "2015-07-21 23:54"
+    },
+    {
+        "name": "FU",
+        "userid": "",
+        "deviceid": "",
+        "score": 2040,
+        "level": 1,
+        "datetime": "2015-07-21 23:31"
+    }
+]

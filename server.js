@@ -108,5 +108,5 @@ http.createServer(function(req, res) {
   }
      
     
-}).listen(port,host);
+}).listen(port); //port,host
 console.log("Connected to " + port + "   " + host);
