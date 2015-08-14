@@ -69,8 +69,6 @@ var insert_records = function(req, res) {
 	                query.on('end', function() {
 				            client.end();
 				            console.log("INSERT INTO Sucessful, Connection Closed");
-				            res.write("Insert Sucessful");//see end of method for res.end();
-				            res.end();
 				     });
 
 				     // Handle Connection Errors
@@ -87,7 +85,6 @@ var insert_records = function(req, res) {
 			    console.log("insert_records EXCEPTION: " + e);
 		        //return false;
 		    }
-		    res.end();
 	});
     
    // Create table if it doesn't exist - NOTE- DB MUST exist!
@@ -112,7 +109,7 @@ var insert_records = function(req, res) {
    // Write output
    res.writeHead(200, {'Content-Type': 'text/plain'});
    res.write("POST data initialised\n");
-   //res.end();
+   res.end();
    console.log("POST data initialised");
    }
 
