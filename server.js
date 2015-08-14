@@ -70,6 +70,7 @@ var insert_records = function(req, res) {
 				            client.end();
 				            console.log("INSERT INTO Sucessful, Connection Closed");
 				            res.write("Insert Sucessful");//see end of method for res.end();
+				            res.end();
 				     });
 
 				     // Handle Connection Errors
