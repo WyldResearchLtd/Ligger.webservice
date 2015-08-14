@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "pg": "^4.2.0"
+    "pg": "^4.2.0",
+    "console-stamp": "^0.1.6"
   }
 }

@@ -8,6 +8,8 @@
 var pg = require("pg")
 var http = require("http")
 var crypto = require("crypto");
+require('console-stamp')(console, '[ddd mmm dd yyyy HH:MM:ss.l]');
+
 var port = 5433;
 var host = '127.0.0.1';
 var sharedSecret = '608169da637a58ac0bff23895b58f8de5ef982a5a30f5477e2fdea27c5bdef8d5b0b13bfc8c2c77c';
@@ -67,6 +69,7 @@ var insert_records = function(req, res) {
 	                query.on('end', function() {
 				            client.end();
 				            console.log("INSERT INTO Sucessful, Connection Closed");
+				            res.write("Insert Sucessful");
 				     });
 
 				     // Handle Connection Errors
@@ -81,8 +84,9 @@ var insert_records = function(req, res) {
                }
 		    } catch (e) {
 			    console.log("insert_records EXCEPTION: " + e);
-		        return false;
+		        //return false;
 		    }
+		    res.end();
 	});
     
    // Create table if it doesn't exist - NOTE- DB MUST exist!
