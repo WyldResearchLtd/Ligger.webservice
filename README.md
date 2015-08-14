@@ -63,3 +63,27 @@ chmod +x ./stop
 
 NOTE- Again refer to http://www.bennadel.com/blog/2321-how-i-got-node-js-running-on-a-linux-micro-instance-using-amazon-ec2.htm
 
+*LOGS*
+---------
+
+The ./start script adds logs
+
+-l  LOGFILE      Logs the forever output to LOGFILE
+-o  OUTFILE      Logs stdout from child script to OUTFILE
+-e  ERRFILE      Logs stderr from child script to ERRFILE
+
+Adding -a to this lets the logs append in case you shut down
+
+-al  LOGFILE      Logs the forever output to LOGFILE
+-ao  OUTFILE      Logs stdout from child script to OUTFILE
+-ae  ERRFILE      Logs stderr from child script to ERRFILE
+
+from the root of the EC2 image type:
+
+cat ./Ligger.webservice/out.log
+
+or better yet, use tac (backwards CAT)
+
+tac ./Ligger.webservice/out.log
+
+
