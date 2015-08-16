@@ -30,9 +30,6 @@ var insert_records = function(req, res) {
 	});
 
 	req.on('end', function() {
-	      // empty 200 OK response for now
-	      res.writeHead(200, "OK", {'Content-Type': 'text/html'});
-	      res.end();
 	      console.log("Data end.");
 	      //Check hmac and Add to DB 
 	        try {
@@ -62,27 +59,41 @@ var insert_records = function(req, res) {
 	                  ],function(err, result){
 						if(err) {
 					          console.log("INSERT INTO Query: " + err);
+					          res.writeHead(409, {'Content-Type': 'text/plain'}); //409 Conflict: Indicates that the request could not be processed because of conflict in the request, such as an edit conflict in the case of multiple updates.
+							  res.write("DB Write Error:" + err + "\n");  //most commonly, constraint conflict
+							  res.end();
 					    }
 	                });
 	                console.log("Attempt to Insert Score data: UID" + jsonData.scoreObj.UserGUID + " DID: " + jsonData.scoreObj.DeviceGUID + " Date: " + jsonData.scoreObj.scoreDate);
 	                //close connection on end
 	                query.on('end', function() {
-				            client.end();
+				            //client.end();
 				            console.log("INSERT INTO Sucessful, Connection Closed");
+				            res.writeHead(200, {'Content-Type': 'text/plain'});
+							res.write("POST Success\n");
+							res.end();
 				     });
 
 				     // Handle Connection Errors
 				     if(err) {
 				          console.log("Connection (INSERT INTO)  Error:" + err);
+				          res.writeHead(403, {'Content-Type': 'text/plain'}); //403 Forbidden: 
+						  res.write("POST Connection Error\n");
+						  res.end();
 				      }
-				     
                   });
                } else {
-					console.log("ERROR: Signatures did not match");
-					console.log(data);
+					console.log(">>ERROR: Signatures did not match");
+					//console.log(data);
+					res.writeHead(401, {'Content-Type': 'text/plain'}); //401 Unauthorized: 
+					res.write("POST Error: Signatures did not match\n");
+					res.end();
                }
 		    } catch (e) {
 			    console.log("insert_records EXCEPTION: " + e);
+			    res.writeHead(500, {'Content-Type': 'text/plain'}); //500 Internal server error: 
+			    res.write("POST Exception" + e + "\n");
+				res.end();
 		        //return false;
 		    }
 	});
@@ -93,6 +104,9 @@ var insert_records = function(req, res) {
          	function(err, result){
 				if(err) {
 			          console.log("CREATE TABLE IF NOT EXISTS Query: " + err);
+			          res.writeHead(500, {'Content-Type': 'text/plain'}); //500 Internal server error: 
+				      res.write("POST CREATE TABLE Query Error" + err + "\n");
+					  res.end();
 			    }
          });
         
@@ -104,12 +118,11 @@ var insert_records = function(req, res) {
 	     // Handle Connection Errors
 	     if(err) {
 	          console.log("Connection (CREATE TABLE IF NOT EXISTS) Error:" + err);
+	            res.writeHead(500, {'Content-Type': 'text/plain'}); //500 Internal server error: 
+			    res.write("POST CREATE TABLE Connection Error" + err + "\n");
+				res.end();
 	      }
    });
-   // Write output
-   res.writeHead(200, {'Content-Type': 'text/plain'});
-   res.write("POST data initialised\n");
-   res.end();
    console.log("POST data initialised");
    }
 
