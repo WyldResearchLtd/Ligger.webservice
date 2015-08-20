@@ -51,6 +51,17 @@ nano  start
 ————————————————————————————————————————————————————————————
 chmod +x ./start
 
+export PATH=./node_modules/forever/bin:$PATH
+
+
+Note- also created a script called 'list'
+that is just:
+
+ ./node_modules/forever/bin/forever list
+
+
+
+
 nano stop
 ————————————————————————————————————————————————————————————
 #!/bin/bash

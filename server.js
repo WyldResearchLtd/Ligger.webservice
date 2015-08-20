@@ -111,8 +111,12 @@ var insert_records = function(req, res) {
          });
         
          query.on('end', function() {
+	          try {
 	            client.end();
 	            console.log("CREATE TABLE IF NOT EXISTS Sucessful, Connection Closed");
+	          } catch (e) {
+				console.log("query.on('end') EXCEPTION: " + e);
+		      }
 	     });
 
 	     // Handle Connection Errors
@@ -178,7 +182,7 @@ http.createServer(function(req, res) {
          list_records(req,res);
      }
      else {
-     	console.log("[405] " + req.method + " to " + req.url);
+     	console.log("[405] " + req.method);
     	res.writeHead(405, "Method not supported", {'Content-Type': 'text/html'});
     	res.end('<html><head><title>405 - Method not supported</title></head><body><h1>Method not supported.</h1></body></html>');
   }
