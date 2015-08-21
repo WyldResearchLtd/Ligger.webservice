@@ -97,7 +97,7 @@ var insert_records = function(req, res) {
 		        //return false;
 		    }
 	});
-    
+/*    
    // Create table if it doesn't exist - NOTE- DB MUST exist!
    pg.connect(strDBconn, function(err, client, done) {
    		var query = client.query("CREATE TABLE IF NOT EXISTS scores(userID text NOT NULL, deviceID text NOT NULL, name text, score integer, level integer, datetime text, log text, timeremaining integer, CONSTRAINT users_pkey PRIMARY KEY (userID, deviceID, datetime))",
@@ -127,6 +127,7 @@ var insert_records = function(req, res) {
 				res.end();
 	      }
    });
+*/
    console.log("POST data initialised");
    }
 
@@ -170,7 +171,7 @@ var insert_records = function(req, res) {
 		    });
 	    }); //end of pg.connect
     }); // end of req.on('end')
-  
+/*  
   pg.connect(strDBconn, function(err, client, done) {
   	// Create table if it doesn't exist - NOTE- DB MUST exist!
   	var query = client.query("CREATE TABLE IF NOT EXISTS scores(userID text NOT NULL, deviceID text NOT NULL, name text, score integer, level integer, datetime text, log text, timeremaining integer, CONSTRAINT users_pkey PRIMARY KEY (userID, deviceID, datetime))");
@@ -189,6 +190,7 @@ var insert_records = function(req, res) {
          console.log("Connection (CREATE TABLE IF NOT EXISTS) Error:" + err);
      }
   });
+*/
   console.log("GET data initialised");
 }
 
