@@ -11,7 +11,7 @@ var crypto = require("crypto");
 require('console-stamp')(console, '[ddd mmm dd yyyy HH:MM:ss.l]');
 
 var port = 5433;
-var host = '127.0.0.1';
+//var host = '127.0.0.1';
 var sharedSecret = '608169da637a58ac0bff23895b58f8de5ef982a5a30f5477e2fdea27c5bdef8d5b0b13bfc8c2c77c';
 //var strDBconn = "pg://postgres:postgres@localhost:5432/ligger";
 var strDBconn = "pg://fezzee:f33ZZAR1@ligger.fezzee.net:5432/ligger";
@@ -221,11 +221,11 @@ var insert_records = function(req, res) {
 http.createServer(function(req, res) {
      
      if(req.method == 'POST') {
-	        console.log("POST " + req.url)
+	        console.log("POST " + req.url + "' from " + req.connection.remoteAddress)
             insert_records(req,res);
      }
      else if(req.method == 'GET') {
-	     console.log("GET '" + req.url + "'")
+	     console.log("GET '" + req.url + "' from " + req.connection.remoteAddress)
 	     if (req.url == "/")
 	     {
          	list_records(req,res);
@@ -239,4 +239,4 @@ http.createServer(function(req, res) {
      
     
 }).listen(port); //port,host
-console.log("Connected to " + port + "   " + host);
+console.log("SERVER STARTED: Listening on " + port);// + "   " + host);
