@@ -154,6 +154,7 @@ var insert_records = function(req, res) {
 
 		   query.on("end", function (result) {
 			  try {
+				client.end();
 				console.log("SELECT Sucessful, Connection Closed");
 				res.writeHead(200, {'Content-Type': 'text/plain'});
 				res.write(JSON.stringify(result.rows) + "\n");
@@ -174,39 +175,13 @@ var insert_records = function(req, res) {
   	// Create table if it doesn't exist - NOTE- DB MUST exist!
   	var query = client.query("CREATE TABLE IF NOT EXISTS scores(userID text NOT NULL, deviceID text NOT NULL, name text, score integer, level integer, datetime text, log text, timeremaining integer, CONSTRAINT users_pkey PRIMARY KEY (userID, deviceID, datetime))");
 
-	query.on("end", function (result) {
-		try {
-			//client.end();
-			console.log("CREATE TABLE IF NOT EXISTS Sucessful, Connection Closed");
-			
-			pg.connect(strDBconn, function(err, client, done) {
-				// Select the rows in the table, ordered and limited
-				var query = client.query("SELECT name, userID, deviceID, score, level, datetime FROM scores ORDER BY score DESC, userID DESC LIMIT 3");
-
-			    query.on("row", function (row, result) {
-					result.addRow(row);
-				});
-
-				query.on("end", function (result) {
-					try {
-						console.log("SELECT Sucessful, Connection Closed");
-						res.writeHead(200, {'Content-Type': 'text/plain'});
-						res.write(JSON.stringify(result.rows) + "\n");
-						res.end();
-					} catch (e) {
-						console.log("GET query.on(end) EXCEPTION: " + e);
-				    }
-				});
-
-				query.on('error', function(err) {
-					//cannot use the err function inline in client.query, because you'll get double results
-					console.log("Query (SELECT): " + err);
-				});
-			});
-			
-		} catch (e) {
-			console.log("GET query.on(end) EXCEPTION: " + e);
-        }
+    query.on('end', function() {
+         try {
+           client.end();
+           console.log("GET- CREATE TABLE IF NOT EXISTS Sucessful, Connection Closed");
+         } catch (e) {
+			console.log("GET query.on('end') EXCEPTION: " + e);
+	      }
     });
 
     // Handle Connection Errors
