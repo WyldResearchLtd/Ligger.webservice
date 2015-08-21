@@ -25,12 +25,12 @@ var insert_records = function(req, res) {
     //console.log("POST Request obj: " + req);
     req.on('data', function(chunk) {
 	      data += chunk.toString();
-	      console.log("Received body data");
+	      console.log("POST Received body data");
 	      //console.log(chunk.toString());
 	});
 
 	req.on('end', function() {
-	      console.log("Data end.");
+	      console.log("POST Data end.");
 	      //Check hmac and Add to DB 
 	        try {
 		       //check HMAC
@@ -67,7 +67,7 @@ var insert_records = function(req, res) {
 	                console.log("Attempt to Insert Score data: UID" + jsonData.scoreObj.UserGUID + " DID: " + jsonData.scoreObj.DeviceGUID + " Date: " + jsonData.scoreObj.scoreDate);
 	                //close connection on end
 	                query.on('end', function() {
-				            //client.end();
+				            client.end();
 				            console.log("INSERT INTO Sucessful, Connection Closed");
 				            res.writeHead(200, {'Content-Type': 'text/plain'});
 							res.write("POST Success\n");
@@ -132,53 +132,104 @@ var insert_records = function(req, res) {
 
 
   // GET
-var list_records = function(req, res) {
-  console.log("GET-list_records");
+  var list_records = function(req, res) {
+    console.log("GET-list_records");
+
+    //this required to make req.on(end) work- never called!
+    req.on('data', function(chunk) {
+	   console.log("GET Received body data");
+	});
+
+    req.on('end', function() {
+	
+	   console.log("GET query.on(end)-list_records");
+	
+	   pg.connect(strDBconn, function(err, client, done) {
+		   // Select the rows in the table, ordered and limited
+		   var query = client.query("SELECT name, userID, deviceID, score, level, datetime FROM scores ORDER BY score DESC, userID DESC LIMIT 3");
+
+	       query.on("row", function (row, result) {
+			  result.addRow(row);
+		   });
+
+		   query.on("end", function (result) {
+			  try {
+				console.log("SELECT Sucessful, Connection Closed");
+				res.writeHead(200, {'Content-Type': 'text/plain'});
+				res.write(JSON.stringify(result.rows) + "\n");
+				res.end();
+			  } catch (e) {
+				console.log("GET query.on(end) EXCEPTION: " + e);
+		      }
+		    });
+		
+		    query.on('error', function(err) {
+			   //cannot use the err function inline in client.query, because you'll get double results
+			   console.log("Query (SELECT): " + err);
+		    });
+	    }); //end of pg.connect
+    }); // end of req.on('end')
   
   pg.connect(strDBconn, function(err, client, done) {
   	// Create table if it doesn't exist - NOTE- DB MUST exist!
-  	//client.query("CREATE TABLE IF NOT EXISTS scores(userID text NOT NULL, deviceID text NOT NULL, name text, score integer, level integer, datetime text, log text, timeremaining integer, CONSTRAINT users_pkey PRIMARY KEY (userID, deviceID, datetime))");
+  	var query = client.query("CREATE TABLE IF NOT EXISTS scores(userID text NOT NULL, deviceID text NOT NULL, name text, score integer, level integer, datetime text, log text, timeremaining integer, CONSTRAINT users_pkey PRIMARY KEY (userID, deviceID, datetime))");
 
-  	// Select the rows in the table, ordered and limited
-  	var query = client.query("SELECT name, userID, deviceID, score, level, datetime FROM scores ORDER BY score DESC, userID DESC LIMIT 3");
+	query.on("end", function (result) {
+		try {
+			//client.end();
+			console.log("CREATE TABLE IF NOT EXISTS Sucessful, Connection Closed");
+			
+			pg.connect(strDBconn, function(err, client, done) {
+				// Select the rows in the table, ordered and limited
+				var query = client.query("SELECT name, userID, deviceID, score, level, datetime FROM scores ORDER BY score DESC, userID DESC LIMIT 3");
 
-  	query.on("row", function (row, result) {
-    	 result.addRow(row);
-   	});
+			    query.on("row", function (row, result) {
+					result.addRow(row);
+				});
 
-   	query.on("end", function (result) {
-      
-	try {
-        client.end();
-        console.log("SELECT Sucessful, Connection Closed");
-    	res.writeHead(200, {'Content-Type': 'text/plain'});
-    	res.write(JSON.stringify(result.rows) + "\n");
-    	res.end();
-	} catch (e) {
-		console.log("GET query.on('end') EXCEPTION: " + e);
-      }
+				query.on("end", function (result) {
+					try {
+						console.log("SELECT Sucessful, Connection Closed");
+						res.writeHead(200, {'Content-Type': 'text/plain'});
+						res.write(JSON.stringify(result.rows) + "\n");
+						res.end();
+					} catch (e) {
+						console.log("GET query.on(end) EXCEPTION: " + e);
+				    }
+				});
+
+				query.on('error', function(err) {
+					//cannot use the err function inline in client.query, because you'll get double results
+					console.log("Query (SELECT): " + err);
+				});
+			});
+			
+		} catch (e) {
+			console.log("GET query.on(end) EXCEPTION: " + e);
+        }
     });
-
-//    query.on('error', function(err) {
-	      //cannot use the err function inline in client.query, because you'll get double results
-//	      console.log("Query (SELECT): " + err);
-//	});
 
     // Handle Connection Errors
     if(err) {
-         console.log("Connection (SELECT) Error:" + err);
+         console.log("Connection (CREATE TABLE IF NOT EXISTS) Error:" + err);
      }
   });
+  console.log("GET data initialised");
 }
 
 // Create server 
 http.createServer(function(req, res) {
      
      if(req.method == 'POST') {
+	        console.log("POST " + req.url)
             insert_records(req,res);
      }
      else if(req.method == 'GET') {
-         list_records(req,res);
+	     console.log("GET '" + req.url + "'")
+	     if (req.url == "/")
+	     {
+         	list_records(req,res);
+         }
      }
      else {
      	console.log("[405] " + req.method + " not supported");
