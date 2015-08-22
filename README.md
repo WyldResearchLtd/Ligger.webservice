@@ -98,3 +98,44 @@ or better yet, use tac (backwards CAT)
 tac ./Ligger.webservice/out.log  
   
   
+Deploying to ElasticBeanStalk  
+------------------- 
+$ git init  
+$ git add .  
+$ git commit -m "initial commit"  
+$ eb init my-first-node-api  
+  
+  
+When you d/l the zip from Github, unzip it and go into the folder and zip just server.js and package.json, and upload that.  
+ 
+
+Using Configuration Files  
+  
+You can include one or more configuration files with your source bundle. Configuration files must be named with the extension .config (for example, myapp.config) and placed in an .ebextensions top-level directory in your source bundle. Configuration files are executed in alphabetical order. For example, .ebextensions/01run.config is executed before .ebextensions/02do.config.  
+
+Commands  
+  
+You can use the commands key to execute commands on the EC2 instance. The commands are processed in alphabetical order by name, and they run before the application and web server are set up and the application version file is extracted.  
+  
+  Key	      Description  
+----------  
+command       Required. Either an array or a string specifying the command to run. If you use an array, you do not need to escape space characters or enclose command parameters in quotes.  
+env           Optional. Sets environment variables for the command. This property overwrites, rather than appends, the existing environment.  
+cwd           Optional. The working directory. By default, Elastic Beanstalk attempts to find the directory location of your project. If not found, then "/" is used.  
+test          Optional. A command that must return the value true (exit code 0) in order for Elastic Beanstalk to process the command (e.g., a bash script) contained in the command key.  
+ignoreErrors  Optional. A boolean value that determines if other commands should run if the command contained in the command key fails (returns a nonzero value). Set this value to true if you want to continue running commands even if the command fails. Set it to false if you want to stop running commands if the command fails. The default value is false.  
+  
+Here is an example:  
+commands:  
+  python_install:  
+    command: myscript.py  
+    cwd: /home/ec2-user  
+    env: myvarname: myvarvalue  
+    test: '[ ! /usr/bin/python ] && echo "python not installed"'  
+  
+  
+Here's my script for setting the port redirection (as above):  
+  
+commands:  
+  port-redirection_:  
+    command: sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 5433  
