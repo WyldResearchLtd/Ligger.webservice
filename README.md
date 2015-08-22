@@ -124,6 +124,8 @@ env           Optional. Sets environment variables for the command. This propert
 cwd           Optional. The working directory. By default, Elastic Beanstalk attempts to find the directory location of your project. If not found, then "/" is used.  
 test          Optional. A command that must return the value true (exit code 0) in order for Elastic Beanstalk to process the command (e.g., a bash script) contained in the command key.  
 ignoreErrors  Optional. A boolean value that determines if other commands should run if the command contained in the command key fails (returns a nonzero value). Set this value to true if you want to continue running commands even if the command fails. Set it to false if you want to stop running commands if the command fails. The default value is false.  
+
+
   
 Here is an example:  
 commands:  
@@ -134,8 +136,17 @@ commands:
     test: '[ ! /usr/bin/python ] && echo "python not installed"'  
   
   
-Here's my script for setting the port redirection (as above):  
+Here's my script for setting the port redirection (as above):
+
+NOTE: Indentation is important. Use 5 spaces, NOT a tab. Also, you cannot use Sudo, and put double quotes around commands that have spaces:  
   
-commands:  
-  port-redirection_:  
-    command: sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 5433  
+  
+The ZIP for upload to EB  
+------------------------  
+Also, DO NOT USE the UI version (right click) of the OSX Compression to make a Zip file- it add hidden files (__MACOSX)  
+Use the commandline:  
+
+zip Archive.zip .ebextensions/redirect.config server.js package.json  
+
+NOTE: I had to use Port 80 as my listening port for these services, because I coudln't get requests sent to the Load Balancer on 80 to redirect to the instances on 5433  
+  

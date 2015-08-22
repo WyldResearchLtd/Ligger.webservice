@@ -206,6 +206,10 @@ http.createServer(function(req, res) {
 	     if (req.url == "/")
 	     {
          	list_records(req,res);
+         } 	else if (req.url == "/loaderio-cb81bfb1d360e233a7abf69891f1f1b7/") {
+               res.writeHead(200, {'Content-Type': 'text/plain'});
+               res.write(process.env.LOADERIO);
+               res.end();
          }
      }
      else {
@@ -215,5 +219,5 @@ http.createServer(function(req, res) {
   }
      
     
-}).listen(port); //port,host
-console.log("SERVER STARTED: Listening on " + port);// + "   " + host);
+}).listen(process.env.PORT || port);
+console.log("SERVER STARTED: Listening on " + process.env.PORT || port);

@@ -2,9 +2,7 @@
   "name": "Ligger.webservice",
   "version": "0.0.1",
   "private": true,
-  "scripts": {
-    "start": "node app"
-  },
+  "main": "server.js",
   "dependencies": {
     "pg": "^4.2.0",
     "console-stamp": "^0.1.6"
