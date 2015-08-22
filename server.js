@@ -206,11 +206,7 @@ http.createServer(function(req, res) {
 	     if (req.url == "/")
 	     {
          	list_records(req,res);
-         } else if (req.url == "/loaderio-cb81bfb1d360e233a7abf69891f1f1b7/") {
-				res.writeHead(200, {'Content-Type': 'text/plain'});
-				res.write("loaderio-cb81bfb1d360e233a7abf69891f1f1b7");
-				res.end();
-		 }
+         }
      }
      else {
      	console.log("[405] " + req.method + " not supported");
