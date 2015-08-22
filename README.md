@@ -26,16 +26,16 @@ nodejs server.js
 
 NOTE- changed server.js to that listen is only specifying the port as a parameter, instead of the port and host
 
-# non core services should not operate below port 1024, so we use port forwarding
+non core services should not operate below port 1024, so we use port forwarding
 
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to 5433
 
-#  if you install Node.js from a package manager your bin may be called nodejs so you just need to symlink it 
+if you install Node.js from a package manager your bin may be called nodejs so you just need to symlink it 
 
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 
-#Create Start and Stop scripts for forever 
+Start, Stop, and List scripts for forever 
 
 nano  start
 ————————————————————————————————————————————————————————————
@@ -64,7 +64,7 @@ that is just:
 
 nano stop
 ————————————————————————————————————————————————————————————
-#!/bin/bash
+!/bin/bash
 
  # Invoke the Forever module (to STOP our Node.js server).
  ./node_modules/forever/bin/forever stop server.js
