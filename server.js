@@ -10,7 +10,7 @@ var http = require("http")
 var crypto = require("crypto");
 require('console-stamp')(console, '[ddd mmm dd yyyy HH:MM:ss.l]');
 
-var port = 5433;
+var defaultport = 5433;
 //var host = '127.0.0.1';
 var sharedSecret = '608169da637a58ac0bff23895b58f8de5ef982a5a30f5477e2fdea27c5bdef8d5b0b13bfc8c2c77c';
 //var strDBconn = "pg://postgres:postgres@localhost:5432/ligger";
@@ -219,5 +219,5 @@ http.createServer(function(req, res) {
   }
      
     
-}).listen(process.env.PORT || port);
-console.log("SERVER STARTED: Listening on " + process.env.PORT || port);
+}).listen(process.env.PORT || defaultport);
+console.log("SERVER STARTED: Listening on " + process.env.PORT || defaultport);
