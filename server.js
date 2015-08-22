@@ -8,15 +8,14 @@
 var pg = require("pg")
 var http = require("http")
 var crypto = require("crypto");
+var toobusy = require('toobusy');
 require('console-stamp')(console, '[ddd mmm dd yyyy HH:MM:ss.l]');
 
 var defaultport = 5433;
-//var host = '127.0.0.1';
-var sharedSecret = '608169da637a58ac0bff23895b58f8de5ef982a5a30f5477e2fdea27c5bdef8d5b0b13bfc8c2c77c';
-//var strDBconn = "pg://postgres:postgres@localhost:5432/ligger";
-var strDBconn = "pg://fezzee:f33ZZAR1@ligger.fezzee.net:5432/ligger";
+var sharedSecret = process.env.SHAREDSECRET;
+var strDBconn = process.env.DBCONN;
 
-//POST
+/////////////POST//////////////////////////////////////////////////////////////////////////////
 var insert_records = function(req, res) {
    console.log("POST-insert_records");
    
@@ -132,7 +131,7 @@ var insert_records = function(req, res) {
    }
 
 
-  // GET
+/////////////GET//////////////////////////////////////////////////////////////////////////////
   var list_records = function(req, res) {
     console.log("GET-list_records");
 
@@ -194,30 +193,38 @@ var insert_records = function(req, res) {
   console.log("GET data initialised");
 }
 
+
 // Create server 
 http.createServer(function(req, res) {
-     
+
+     if (toobusy()) 
+		res.send(503, "I'm busy right now, sorry.");
+	 else 
+	 {    
+
      if(req.method == 'POST') {
 	        console.log("POST " + req.url + "' from " + req.connection.remoteAddress)
             insert_records(req,res);
      }
      else if(req.method == 'GET') {
 	     console.log("GET '" + req.url + "' from " + req.connection.remoteAddress)
+
 	     if (req.url == "/")
 	     {
          	list_records(req,res);
-         } 	else if (req.url == "/loaderio-cb81bfb1d360e233a7abf69891f1f1b7/") {
-               res.writeHead(200, {'Content-Type': 'text/plain'});
-               res.write(process.env.LOADERIO);
-               res.end();
+         } 	else if (req.url == "/" + process.env.LOADERIO + "/") {   //replace this with an eviron var too!
+	              console.log("Loadio verified: " + process.env.LOADERIO);
+                  res.writeHead(200, {'Content-Type': 'text/plain'});
+                  res.write(process.env.LOADERIO);
+                  res.end();
          }
      }
      else {
      	console.log("[405] " + req.method + " not supported");
-    	res.writeHead(405, "Method not supported", {'Content-Type': 'text/html'});
-    	res.end('<html><head><title>405 - Method not supported</title></head><body><h1>Method not supported.</h1></body></html>');
-  }
-     
+     	res.writeHead(405, "Method not supported", {'Content-Type': 'text/html'});
+     	res.end('<html><head><title>405 - Method not supported</title></head><body><h1>Method not supported.</h1></body></html>');
+     }
+     }
     
 }).listen(process.env.PORT || defaultport);
 console.log("SERVER STARTED: Listening on " + process.env.PORT || defaultport);
