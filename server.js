@@ -5,8 +5,8 @@
  * A Node.js web service with PostgreSQL DB
  * 
  *************************************************************************************************************/
-var pg = require("pg")
-var http = require("http")
+var pg = require("pg");
+var http = require("http");
 var crypto = require("crypto");
 var toobusy = require('toobusy');
 require('console-stamp')(console, '[ddd mmm dd yyyy HH:MM:ss.l]');
@@ -197,11 +197,6 @@ var insert_records = function(req, res) {
 // Create server 
 http.createServer(function(req, res) {
 
-     if (toobusy()) 
-		res.send(503, "I'm busy right now, sorry.");
-	 else 
-	 {    
-
      if(req.method == 'POST') {
 	        console.log("POST " + req.url + "' from " + req.connection.remoteAddress)
             insert_records(req,res);
@@ -223,7 +218,6 @@ http.createServer(function(req, res) {
      	console.log("[405] " + req.method + " not supported");
      	res.writeHead(405, "Method not supported", {'Content-Type': 'text/html'});
      	res.end('<html><head><title>405 - Method not supported</title></head><body><h1>Method not supported.</h1></body></html>');
-     }
      }
     
 }).listen(process.env.PORT || defaultport);

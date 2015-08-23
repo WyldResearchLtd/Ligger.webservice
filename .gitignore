@@ -3,6 +3,7 @@
 _*
 temp
 *.log
+*.zip
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

@@ -1,11 +1,14 @@
 {
   "name": "Ligger.webservice",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "private": true,
-  "main": "server.js",
+  "main": "app.js",
+  "engine": "node >= 0.4.1",
   "dependencies": {
-    "pg": "^4.2.0",
+    "body-parser": "^1.13.3",
+    "busy": "^0.1.1",
     "console-stamp": "^0.1.6",
-    "toobusy": "*"
+    "express": "^4.13.3",
+    "pg": "^4.2.0"
   }
 }

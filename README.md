@@ -146,7 +146,18 @@ The ZIP for upload to EB
 Also, DO NOT USE the UI version (right click) of the OSX Compression to make a Zip file- it add hidden files (__MACOSX)  
 Use the commandline:  
 
-zip Archive.zip .ebextensions/redirect.config server.js package.json  
+zip Archive.zip server.js package.json  //.ebextensions/redirect.config
 
 NOTE: I had to use Port 80 as my listening port for these services, because I coudln't get requests sent to the Load Balancer on 80 to redirect to the instances on 5433  
+
+Load Testing  
+-----------   
+http://aws.amazon.com/articles/1636185810492479  
+this explains why during my 250 connections in 1 min, no errors are returned, but straight after, I get a 503  
+  
+  
+Common Pitfalls When Testing Elastic Load Balancing  
+
+Elastic Load Balancing Capacity Limits Reached  
+Elastic Load Balancing will likely never reach true capacity limits, but until it scales based on the metrics, there can be periods in which your load balancer will return an HTTP 503 error when it cannot handle any more requests. The load balancers do not try to queue all requests, so if they are at capacity, additional requests will fail. If traffic grows over time, then this behavior works well, but in the case of significant spikes in traffic or in certain load testing scenarios, the traffic may be sent to your load balancer at a rate that increases faster than Elastic Load Balancing can scale to meet it.  
   
