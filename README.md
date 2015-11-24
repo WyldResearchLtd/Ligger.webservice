@@ -148,7 +148,16 @@ Use the commandline:
 
 zip Archive.zip server.js package.json  //.ebextensions/redirect.config
 
-NOTE: I had to use Port 80 as my listening port for these services, because I coudln't get requests sent to the Load Balancer on 80 to redirect to the instances on 5433  
+NOTE: I had to use Port 80 as my listening port for these services, because I coudln't get requests sent to the Load Balancer on 80 to redirect to the instances on 5433
+
+Notes on installing on a new instance
+------------------------------------
+Create these environ vars in Configuration->Software Configuration
+
+DBCONN postgres://fezzee:[PASSWORD]@ligger.culaminlpann.eu-west-1.rds.amazonaws.com:5432/ligger
+PORT 8081
+SHAREDSECRET  [Secret]  
+LOADIO  loadio
 
 Load Testing  
 -----------   
