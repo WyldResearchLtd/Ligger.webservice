@@ -139,6 +139,8 @@ commands:
 Here's my script for setting the port redirection (as above):
 
 NOTE: Indentation is important. Use 5 spaces, NOT a tab. Also, you cannot use Sudo, and put double quotes around commands that have spaces:  
+
+I added tried adding .ebextensions/redirect.config which was meant to redirect the port, but this didn't work
   
   
 The ZIP for upload to EB  
@@ -146,9 +148,9 @@ The ZIP for upload to EB
 Also, DO NOT USE the UI version (right click) of the OSX Compression to make a Zip file- it add hidden files (__MACOSX)  
 Use the commandline:  
 
-zip Archive.zip server.js package.json  //.ebextensions/redirect.config
+zip Archive.zip server.js app.js package.json  
 
-NOTE: I had to use Port 80 as my listening port for these services, because I coudln't get requests sent to the Load Balancer on 80 to redirect to the instances on 5433
+NOTE: I had to use Port 8081 as my listening port for these services, because I coudln't get requests sent to the Load Balancer on 80 to redirect to the instances on 5433
 
 Notes on installing on a new instance
 ------------------------------------
