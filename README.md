@@ -154,9 +154,9 @@ Notes on installing on a new instance
 ------------------------------------
 Create these environ vars in Configuration->Software Configuration
 
-DBCONN postgres://fezzee:[PASSWORD]@ligger.culaminlpann.eu-west-1.rds.amazonaws.com:5432/ligger
+DBCONN postgres://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB]
 PORT 8081
-SHAREDSECRET  [Secret]  
+SHAREDSECRET  [SECRET]  
 LOADIO  loadio
 
 Load Testing  
