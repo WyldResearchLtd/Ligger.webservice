@@ -154,11 +154,11 @@ Notes on installing on a new instance
 ------------------------------------
 Create these environ vars in Configuration->Software Configuration
 
-DBCONN postgres://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB]
-PORT 8081
+DBCONN postgres://[USERNAME]:[PASSWORD]@[HOST]:[PORT]/[DB]  
+PORT 8081  
 SHAREDSECRET  [SECRET]  
-LOADIO  loadio
-
+LOADIO  loadio  
+  
 Load Testing  
 -----------   
 http://aws.amazon.com/articles/1636185810492479  
