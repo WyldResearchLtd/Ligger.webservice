@@ -16,7 +16,8 @@ var busyCheck = busy(function(amount) {
 // middleware which blocks requests when we're too busy
 app.use(function(req, res, next) {
     if (busyCheck.blocked) {
-        res.send(503, "I'm busy right now, sorry.");
+        res.send(503, "Server is too busy right now, try again.");
+        console.log("Server rejected request- 503- too busy");
     } else {
         next();
     }

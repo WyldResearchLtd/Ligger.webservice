@@ -1,7 +1,10 @@
-Ligger.webservice  
------------------  
+Wyld London Underground Webservice  
+----------------------------------    
   
-AWS Ligger.webservice  
+AWS wyld.lu.webservice  
+later I will use the following lib or create our own an integration with TFL's Universal API inspired by this:
+https://www.npmjs.com/package/tfl-api
+
 
 http://www.bennadel.com/blog/2321-how-i-got-node-js-running-on-a-linux-micro-instance-using-amazon-ec2.htm
   
@@ -150,7 +153,8 @@ Use the commandline:
 
 zip Archive.zip server.js app.js package.json  
 
-NOTE: I had to use Port 8081 as my listening port for these services, because I coudln't get requests sent to the Load Balancer on 80 to redirect to the instances on 5433
+NOTE: I had to use Port 8081 as my listening port for these services, 
+because I coudln't get requests sent to the Load Balancer on 80 to redirect to the instances on 5433
 
 Notes on installing on a new instance
 ------------------------------------
