@@ -192,7 +192,7 @@ log is never saved anywhere on its own
 	
 	   pg.connect(process.env.DBCONN || defaultDBconn, function(err, client, done) {
 		   // Select the rows in the table, ordered and limited
-		   var query = client.query("SELECT statusId, lineId, statusSeverityDescription, statusSeverity, created, archive FROM status");
+		   var query = client.query("SELECT statusId, lineId, statusSeverityDescription, statusSeverity, created, reason, archive FROM status");
 /* Database structure
     statusId				     integer NOT NULL, --added later- may not need it- lineId could be ok as only one entry ever needed per line
     lineId           			 varchar(80),   -- description
