@@ -14,7 +14,7 @@ require('console-stamp')(console, '[ddd mmm dd yyyy HH:MM:ss.l]');
 
 var defaultport = 8081;
 var sharedSecret = process.env.SHAREDSECRET;
-var strDBconn = "postgres://fezzee:=3Balmoral@ligger.culaminlpann.eu-west-1.rds.amazonaws.com:5432/wyldlu"; //"postgres://gene@localhost:5432/gene"; //process.env.DBCONN;
+var defaultDBconn = "postgres://fezzee:=3Balmoral@ligger.culaminlpann.eu-west-1.rds.amazonaws.com:5432/wyldlu"; //"postgres://gene@localhost:5432/gene"; //process.env.DBCONN;
 
 
 
@@ -86,7 +86,7 @@ log is never saved anywhere on its own
 		           //pass json data to the func below, and from it identify the structure
 		           
 		           
-		           pg.connect(strDBconn, function(err, client, done) {
+		           pg.connect( process.env.DBCONN || defaultDBconn, function(err, client, done) {
 		           
 	               var query = client.query("INSERT INTO status(statusId, lineId, statusSeverityDescription, statusSeverity, reason, created, archive) values($1, $2, $3, $4, $5, $6, $7)", 
 	                   [jsonData.status.statusId,
@@ -190,7 +190,7 @@ log is never saved anywhere on its own
 	
 	   console.log("GET query.on(end)-list_records");
 	
-	   pg.connect(strDBconn, function(err, client, done) {
+	   pg.connect(process.env.DBCONN || defaultDBconn, function(err, client, done) {
 		   // Select the rows in the table, ordered and limited
 		   var query = client.query("SELECT statusId, lineId, statusSeverityDescription, statusSeverity, created, archive FROM status");
 /* Database structure
@@ -284,7 +284,7 @@ var server = http.createServer(function(req, res) {
 }).listen(process.env.PORT || defaultport);
 
 server.on ('listening', function(){
-    console.log("Connection String: " + strDBconn);
+    console.log("Connection String: " + process.env.DBCONN || defaultDBconn);
 	console.log('ok, server is running');
 });
 
